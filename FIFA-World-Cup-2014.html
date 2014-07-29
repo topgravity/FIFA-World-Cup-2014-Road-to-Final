@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<title>FIFA World Cup 2014 Road to Final</title>
+<style>
+
+body{
+  background-color: #056;
+}
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+#licensing {
+  fill: green;
+}
+
+.link.licensing {
+  stroke: green;
+}
+
+.link.resolved {
+  stroke-dasharray: 0,2 1;
+}
+
+#how-to-use{
+  width:45%;
+  min-width: 200px;
+  min-height: 200px;
+  background-color: #fff;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  top:30px;
+  border-radius: 20px;
+  padding: 10px;
+-webkit-box-shadow: 1px 0px 5px 0px #000;
+-moz-box-shadow:    1px 0px 5px 0px #000;
+box-shadow:         1px 0px 5px 0px #000;
+}
+
+#code-cantainer{
+  background-color: #800080;
+  color:#fff;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+a{
+  text-decoration: none;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 13px sans-serif;
+  pointer-events: none;
+  color: #fff;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
+var links = [
+
+  {source: "Argentina", target: "Bosnia & Herzegovina", type: "suit"},
+  {source: "Germany", target: "Portugal", type: "licensing"},
+
+  {source: "Argentina", target: "Iran", type: "suit"},
+  {source: "Germany", target: "Ghana", type: "licensing"},
+  {source: "Ghana", target: "Germany", type: "suit"},
+
+  {source: "Argentina", target: "Nigeria", type: "suit"},
+  {source: "Germany", target: "USA", type: "licensing"},
+
+  {source: "Germany", target: "Algeria", type: "licensing"},
+  {source: "Argentina", target: "Switzerland", type: "suit"},
+
+  {source: "Germany", target: "France", type: "licensing"},
+  {source: "Argentina", target: "Belgium", type: "suit"},
+
+  {source: "Germany", target: "Brazil", type: "licensing"},
+  {source: "Argentina", target: "Netherlands", type: "suit"},
+  
+  {source: "Germany", target: "Argentina", type: "licensing"},
+];
+
+var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+});
+
+var width = 960,
+    height = 500;
+
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([width, height])
+    .linkDistance(90)
+    .charge(-300)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// Per-type markers, as they don't inherit styles.
+svg.append("defs").selectAll("marker")
+    .data(["suit", "licensing", "resolved"])
+  .enter().append("marker")
+    .attr("id", function(d) { return d; })
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var path = svg.append("g").selectAll("path")
+    .data(force.links())
+  .enter().append("path")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("circle")
+    .attr("r", 6)
+    .call(force.drag);
+
+var text = svg.append("g").selectAll("text")
+    .data(force.nodes())
+  .enter().append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .text(function(d) { return d.name; });
+
+// Use elliptical arc path segments to doubly-encode directionality.
+function tick() {
+  path.attr("d", linkArc);
+  circle.attr("transform", transform);
+  text.attr("transform", transform);
+}
+
+function linkArc(d) {
+  var dx = d.target.x - d.source.x,
+      dy = d.target.y - d.source.y,
+      dr = Math.sqrt(dx * dx + dy * dy);
+  return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+}
+
+function transform(d) {
+  return "translate(" + d.x + "," + d.y + ")";
+}
+
+</script>
+
+<body>
+<div id="how-to-use">
+<h1>FIFA World Cup 2014 Road to Final</h1>
+<p>FIFA World Cup 2014 Road to Final is a highly user friendly animation, that represents the glorious matches and their results in a very small area. A user can easily judge results in seconds.
+ </p>
+
+<h2>How to use</h2>
+<p>It is an easy to use plugin. A <code>js</code> file must be included to make it work properly.
+  <br>
+  <div id="code-cantainer">
+  <code>
+   &lt;script src="http://d3js.org/d3.v3.min.js"&gt;&lt;/script &gt; <br>
+    </code>
+</div>
+
+In order to add more matches, open this page in your favorite editor and go to line 75. Now for example, adding the following code will make a link from "Argentina"(Winner) to "Bosnia & Herzegovina"(Loser).
+  <div id="code-cantainer">
+  <code>
+    {source: "Argentina", target: "Bosnia & Herzegovina", type: "suit"} <br>
+    </code>
+</div>
+type: <code>"suit"</code> can be changed to <code>"licensing"</code> or <code>"resolved"</code> to change the characteristics of link.
+Complete code is in one file for the easiness of user, so the moment user load file in browser, it will work fine. 
+</p>
+
+
+<h2>Usage</h2>
+<p>
+Mad Twitter is created by <span><a href="http://topgravity.com/">Top Gravity</a></span>, licensed under MIT and is free to use.
+</p>
+
+</div>
+</body>
+</html>
