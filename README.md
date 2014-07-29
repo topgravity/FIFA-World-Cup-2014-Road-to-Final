@@ -2,6 +2,7 @@ FIFA World Cup 2014 Road to Final
 =================================
 <p>FIFA World Cup 2014 Road to Final is a highly user friendly animation, that represents the glorious matches and their results in a very small area. A user can easily judge results in seconds.
  </p>
+ <strong><a href="http://topgravity.com/fifa-world-cup-2014-road-to-final/">Demo</a></strong>
 
 <h2>How to use</h2>
 <p>It is an easy to use plugin. A <code>js</code> file must be included to make it work properly.
